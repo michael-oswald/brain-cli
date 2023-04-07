@@ -6,6 +6,7 @@ use std::env;
 use std::fs;
 use termimad::{ MadSkin, rgb};
 use std::io::Write;
+use rand::Rng;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -38,14 +39,14 @@ fn main() {
     }
 }
 
-fn save_memory(file_location: &String) {
+fn save_memory(file_location: &str) {
     let brain_file_exists = Path::new(file_location).exists();
 
     if !brain_file_exists { //need to create the file, the write to it
-        let path = std::path::Path::new(&file_location);
+        let path = std::path::Path::new(file_location);
         let prefix = path.parent().unwrap();
         std::fs::create_dir_all(prefix).unwrap();
-        File::create(&file_location).expect("Failed to create file, please try again");
+        File::create(file_location).expect("Failed to create file, please try again");
     }
 
     println!("🧠 (Brain): What do you want to remember?");
@@ -66,7 +67,7 @@ fn save_memory(file_location: &String) {
     let mut md_file = OpenOptions::new()
         .write(true)
         .append(true)
-        .open(&file_location)
+        .open(file_location)
         .unwrap();
 
     if !brain_file_exists {
@@ -77,7 +78,14 @@ fn save_memory(file_location: &String) {
     writeln!(md_file,"## {}", why_store_this_thing).expect("Failed to write to file, please try again");
     writeln!(md_file,"```\n{}```\n", thing_to_remember).expect("Failed to write to file, please try again");
 
-    println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain list` to open all my memories");
+    //randomly pick a different hint msg (between two) to show user
+    let mut range = rand::thread_rng();
+    if range.gen_range(1..3) % 2 == 0 {
+        println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain list` to open all my memories");
+    } else {
+        println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain location` to see my file location");
+    }
+
 }
 
 fn make_terminal_skin() -> MadSkin {

@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 termimad = "0.5"
+rand = "0.8.5"
 
 
