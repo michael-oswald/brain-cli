@@ -92,3 +92,4 @@ fn assemble_brain_path() -> String {
     base_dir.push_str("/.brain-cli/brain.md");
     base_dir
 }
+
