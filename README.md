@@ -2,15 +2,20 @@
 
 This is a rust cli (command line interface) program I developed to let users save things they need to reference later.
 
-This is the 🥈`second (v2)` less bare bones version.
+This is the 🥈`second (v2)` slightly less bare bones version. 
+
+# What it looks like:
+![](./brain-cliV2.gif)
+
 ## Usage/Features:
 Invoke the Brain with `brain`
+^ To install this cli on your computer see [below instructions](#how-to-add-this-binary-to-your-path-in-macos-and-linux)
 ```
 brain
 🧠 (Brain): What do you want to remember?
 ....{your response}..
 ```
-^ This saves the contents to `$HOME/.brain-cli/brain.md` or if `$HOME` does not exist, it saves it to the `./.brain-cli/brain.md` current dir
+^ This saves the contents to `$HOME/.brain-cli/brain.md` or if `$HOME` does not exist, it creates a `./.brain-cli/brain.md` in the current directory.
 
 Other commands:
 ```
@@ -22,17 +27,12 @@ brain location
 
 ```
 
-
-
 # Why?
 I find there are many things I want to remember, but not a super easy way to just dump them somewhere formatted nicely. 
 So this is an attempt at just dumping things I need to refer back to later.
 
-# What it looks like:
-![](./brainv1.gif)
-
-## Installation
-**Prereq:** Need to have rust/cargo installed [instructions here](https://doc.rust-lang.org/book/ch01-01-installation.html)
+## Run with Cargo Locally
+**Pre requisite:** Need to have rust/cargo installed [instructions here](https://doc.rust-lang.org/book/ch01-01-installation.html)
 
 ```
 git clone https://github.com/goshipcode/brain-cli.git
@@ -56,3 +56,5 @@ export PATH="[directory of your choice]/bin:$PATH"
 brain 
 ```
 
+## Credits
+Thank you, @Canop for creating a [rust markdown rending on terminal crate](https://github.com/Canop/termimad). I used this for pretty rendering of the brain.md file on the terminal.

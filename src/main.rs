@@ -7,18 +7,12 @@ use std::fs;
 use termimad::{ MadSkin, rgb};
 use std::io::Write;
 
-fn make_skin() -> MadSkin {
-    let mut skin = MadSkin::default();
-    skin.set_headers_fg(rgb(246, 189, 0));
-    skin
-}
-
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let brain_path = get_brain_path();
-    if args.len() < 2 {
-        save_memory();
-    } else {
+    let brain_path = assemble_brain_path();
+    if args.len() < 2 { // no extra params passed, just save the memory
+        save_memory(&brain_path);
+    } else { // at least one param is passed lets check what it is and do stuff
         let first_arg = &args[1];
         if first_arg.eq("list") {
             // list the brain here
@@ -32,7 +26,7 @@ fn main() {
                 .expect("error occurred, could not read brain file");
 
             println!("🧠💡 Brain Contents Below 🧠💡");
-            let skin = make_skin();
+            let skin = make_terminal_skin();
             skin.print_text(file_contents.as_str());
 
         } else if first_arg.eq("location") {
@@ -44,18 +38,8 @@ fn main() {
     }
 }
 
-fn get_brain_path() -> String {
-    let optional_value = option_env!("HOME");
-    let mut base_dir = optional_value.unwrap_or(".").to_string();
-    base_dir.push_str("/.brain-cli/brain.md");
-    base_dir
-}
-
-fn save_memory() {
-    let file_location = get_brain_path();
-    let brain_file_exists = Path::new(file_location.as_str()).exists();
-
-    println!("brain file exists? {brain_file_exists}, file location {file_location}");
+fn save_memory(file_location: &String) {
+    let brain_file_exists = Path::new(file_location).exists();
 
     if !brain_file_exists { //need to create the file, the write to it
         let path = std::path::Path::new(&file_location);
@@ -94,4 +78,17 @@ fn save_memory() {
     writeln!(md_file,"```\n{}```\n", thing_to_remember).expect("Failed to write to file, please try again");
 
     println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain list` to open all my memories");
+}
+
+fn make_terminal_skin() -> MadSkin {
+    let mut skin = MadSkin::default();
+    skin.set_headers_fg(rgb(246, 189, 0));
+    skin
+}
+
+fn assemble_brain_path() -> String {
+    let optional_value = option_env!("HOME");
+    let mut base_dir = optional_value.unwrap_or(".").to_string();
+    base_dir.push_str("/.brain-cli/brain.md");
+    base_dir
 }
