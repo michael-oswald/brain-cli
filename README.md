@@ -41,6 +41,7 @@ cargo run
 ```
 
 ## How to add this binary to your path in macos and linux
+I've only tested this on macos, but should work on linux as well.🤞
 ```
 # First create a release version of the binary
 cargo build --release
