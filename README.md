@@ -5,7 +5,7 @@ This is a rust cli (command line interface) program I developed to let users sav
 This is the 🥈`second (v2)` slightly less bare bones version. 
 
 # What it looks like:
-![](./brain-cliV2.gif)
+![](./brainv2v2.gif)
 
 ## Usage/Features:
 Invoke the Brain with `brain`
@@ -15,15 +15,15 @@ brain
 🧠 (Brain): What do you want to remember?
 ....{your response}..
 ```
-^ This saves the contents to `$HOME/.brain-cli/brain.md` or if `$HOME` does not exist, it creates a `./.brain-cli/brain.md` in the current directory.
+^ This saves the contents to `./.brain-cli/brain.md` in the directory where `brain` binary is running from.
 
 Other commands:
 ```
 # list the brain file in the terminal (with some minimal markdown highlighting)
 brain list
 
-# print out the location of the brain file on your computer
-brain location
+# opens your brain file with your default editor. Under the hood uses: `open -e ./brain-cli/brain.md`. Works on Macos, but not sure on other platforms. 
+brain open
 
 ```
 

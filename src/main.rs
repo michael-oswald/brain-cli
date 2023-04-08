@@ -6,32 +6,37 @@ use std::env;
 use std::fs;
 use termimad::{ MadSkin, rgb};
 use std::io::Write;
+use std::process::Command;
 use rand::Rng;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let brain_path = assemble_brain_path();
+    let brain_path = "./.brain-cli/brain.md";
     if args.len() < 2 { // no extra params passed, just save the memory
-        save_memory(&brain_path);
+        save_memory(brain_path);
     } else { // at least one param is passed lets check what it is and do stuff
         let first_arg = &args[1];
         if first_arg.eq("list") {
             // list the brain here
-            let brain_file_exists = Path::new(&brain_path).exists();
+            let brain_file_exists = Path::new(brain_path).exists();
             if !brain_file_exists {
                 println!("🧠 (Brain): invalid command, please try again");
                 std::process::abort();
             }
 
-            let file_contents = fs::read_to_string(&brain_path)
+            let file_contents = fs::read_to_string(brain_path)
                 .expect("error occurred, could not read brain file");
 
             println!("🧠💡 Brain Contents Below 🧠💡");
             let skin = make_terminal_skin();
             skin.print_text(file_contents.as_str());
 
-        } else if first_arg.eq("location") {
-            println!("🧠 (Brain): Here is my full file path: {brain_path}");
+        } else if first_arg.eq("open") {
+            Command::new("open")
+                .arg("-e")
+                .arg(brain_path)
+                .spawn()
+                .expect("open command failed to run");
         } else {
             println!("🧠 (Brain): invalid command, please try again");
             std::process::abort();
@@ -81,9 +86,9 @@ fn save_memory(file_location: &str) {
     //randomly pick a different hint msg (between two) to show user
     let mut range = rand::thread_rng();
     if range.gen_range(1..3) % 2 == 0 {
-        println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain list` to open all my memories");
+        println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain list` to open all my memories in the terminal 🖥");
     } else {
-        println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain location` to see my file location");
+        println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain open` to open up file in your default text editor 🗒");
     }
 
 }
@@ -92,12 +97,5 @@ fn make_terminal_skin() -> MadSkin {
     let mut skin = MadSkin::default();
     skin.set_headers_fg(rgb(246, 189, 0));
     skin
-}
-
-fn assemble_brain_path() -> String {
-    let optional_value = option_env!("HOME");
-    let mut base_dir = optional_value.unwrap_or(".").to_string();
-    base_dir.push_str("/.brain-cli/brain.md");
-    base_dir
 }
 
