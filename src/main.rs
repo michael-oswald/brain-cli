@@ -21,7 +21,7 @@ fn main() {
             let brain_file_exists = Path::new(brain_path).exists();
             if !brain_file_exists {
                 println!("🧠 (Brain): invalid command, please try again");
-                std::process::abort();
+                std::process::exit(1);
             }
 
             let file_contents = fs::read_to_string(brain_path)
@@ -37,6 +37,33 @@ fn main() {
                 .arg(brain_path)
                 .spawn()
                 .expect("open command failed to run");
+        } else if first_arg.eq("find") {
+            //Validation here to make sure user entered a second param
+            if args.len() < 3 {
+                println!("🧠: Please pass a str arg to the find command like so: `brain find <Your Search String>`");
+                std::process::exit(1);
+            }
+
+            //grab the string user wants to search by:
+            let search_str = &args[2];
+
+            let file_contents = fs::read_to_string(brain_path)
+                .expect("error occurred, could not read brain file");
+
+            //grab the string user is trying to find:
+            let mut did_find = false;
+            for (i, line) in file_contents.lines().enumerate() {
+                if line.contains(search_str) {
+                    did_find = true;
+                    println!("🧠: line: {} => {}", i + 1, line);
+                }
+            }
+
+            //print out if we didn't find any results in the file.
+            if !did_find {
+                println!("🧠: ... No results ...");
+            }
+
         } else {
             println!("🧠 (Brain): invalid command, please try again");
             std::process::abort();
@@ -84,11 +111,13 @@ fn save_memory(file_location: &str) {
     writeln!(md_file,"```\n{}```\n", thing_to_remember).expect("Failed to write to file, please try again");
 
     //randomly pick a different hint msg (between two) to show user
-    let mut range = rand::thread_rng();
-    if range.gen_range(1..3) % 2 == 0 {
-        println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain list` to open all my memories in the terminal 🖥");
-    } else {
-        println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain open` to open up file in your default text editor 🗒");
+    let range = rand::thread_rng().gen_range(1..4);
+
+    match range {
+        // Match a single value
+        1 => println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain list` to open all my memories in the terminal 🖥"),
+        2 => println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain open` to open up file in your default text editor 🗒"),
+        _ => println!("🧠 (Brain): I've saved the new item.\n Hint: use `brain find <text-to-find>` to search for lines in your brain file 🔎"),
     }
 
 }

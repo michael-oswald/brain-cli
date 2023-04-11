@@ -2,7 +2,7 @@
 
 This is a rust cli (command line interface) program I developed to let users save things they need to reference later.
 
-This is the 🥈`second (v2)` slightly less bare bones version. 
+This is the 🥈`third (v3)` slightly bare bones version. 
 
 # What it looks like:
 ![](./brainv2v2.gif)
@@ -25,6 +25,8 @@ brain list
 # opens your brain file with your default editor. Under the hood uses: `open -e ./brain-cli/brain.md`. Works on Macos, but not sure on other platforms. 
 brain open
 
+# search for lines that contain your search string 
+brain find <text-to-search>
 ```
 
 # Why?
